@@ -1,0 +1,111 @@
+---
+# Security baseline role
+# Applies hardening, firewall rules, patching, and user configuration
+
+- name: Update apt cache
+  command: apt-get update -qq
+  changed_when: false
+
+- name: Upgrade installed packages
+  shell: DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -qq
+  register: apt_upgrade_result
+  changed_when: "'Setting up' in apt_upgrade_result.stdout"
+
+- name: Install required packages
+  shell: >
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq
+    curl wget vim htop git net-tools ufw fail2ban unattended-upgrades rsyslog
+  register: apt_install_result
+  changed_when: "'Setting up' in apt_install_result.stdout"
+
+- name: Set hostname
+  hostname:
+    name: "{{ server_hostname }}"
+
+- name: Ensure hostname is in /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    line: "127.0.1.1 {{ server_hostname }}"
+    state: present
+
+- name: Apply SSH hardening configuration
+  copy:
+    dest: /etc/ssh/sshd_config.d/99-hardening.conf
+    content: |
+      PermitRootLogin no
+      PasswordAuthentication no
+      PubkeyAuthentication yes
+      LoginGraceTime 30
+      MaxAuthTries 3
+      X11Forwarding no
+      AllowTcpForwarding no
+      ClientAliveInterval 300
+      ClientAliveCountMax 2
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart SSH
+
+- name: Configure UFW defaults
+  ufw:
+    state: enabled
+    direction: incoming
+    policy: deny
+
+- name: Allow required ports through UFW
+  ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+    comment: "{{ item.comment }}"
+  loop: "{{ allowed_ports }}"
+
+# This Oracle Cloud base image ships an extra iptables INPUT filter that sits
+# in front of UFW's own chain and REJECTs anything not explicitly allowed here.
+# Without this, UFW shows a port as allowed but it is still unreachable externally.
+- name: Allow required ports through the OS-level iptables filter
+  iptables:
+    chain: INPUT
+    protocol: "{{ item.proto }}"
+    destination_port: "{{ item.port }}"
+    jump: ACCEPT
+    action: insert
+    rule_num: 1
+  loop: "{{ allowed_ports }}"
+  when: item.port != 22
+
+- name: Install iptables-persistent so rules survive reboot
+  shell: DEBIAN_FRONTEND=noninteractive apt-get install -y -qq iptables-persistent
+  register: iptables_persistent_result
+  changed_when: "'Setting up' in iptables_persistent_result.stdout"
+
+- name: Save current iptables rules
+  command: netfilter-persistent save
+  changed_when: false
+
+- name: Whitelist trusted admin IPs in Fail2Ban
+  copy:
+    dest: /etc/fail2ban/jail.d/99-ignoreip.conf
+    content: |
+      [DEFAULT]
+      ignoreip = 127.0.0.1/8 ::1 {{ fail2ban_ignoreip | join(' ') }}
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart fail2ban
+
+- name: Enable and start fail2ban
+  systemd:
+    name: fail2ban
+    enabled: true
+    state: started
+
+- name: Configure automatic security updates
+  copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+    owner: root
+    group: root
+    mode: "0644"

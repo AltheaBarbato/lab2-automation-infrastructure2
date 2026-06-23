@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ server_hostname }} – Althea Barbato</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fde8f0 0%, #ede0f7 40%, #dceeff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .wrap { max-width: 520px; width: 100%; }
+        .top-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 2.5rem; }
+        .dot { width: 9px; height: 9px; border-radius: 50%; background: #c084fc; }
+        .dot.pink { background: #f9a8d4; }
+        .dot.blue { background: #93c5fd; }
+        .top-bar span { font-size: 0.72rem; color: #b48cc4; letter-spacing: 0.12em; text-transform: uppercase; margin-left: 4px; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 400; color: #2d1b4e; line-height: 1.15; margin-bottom: 0.4rem; }
+        .byline { font-size: 0.88rem; font-weight: 300; color: #a78cc7; letter-spacing: 0.04em; margin-bottom: 2.2rem; }
+        .divider { height: 1px; background: #e9c8f0; margin: 2rem 0; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem 2rem; margin-bottom: 2rem; }
+        .info-item label { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: #c4a0d8; margin-bottom: 3px; }
+        .info-item p { font-size: 0.88rem; color: #5b3a7e; font-weight: 500; }
+        .status-line { display: flex; align-items: center; gap: 8px; margin-bottom: 2rem; }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #86efac; box-shadow: 0 0 0 3px #dcfce7; }
+        .status-line span { font-size: 0.82rem; color: #7c6090; font-weight: 400; }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .tag { font-size: 0.75rem; font-weight: 400; color: #9b6fc4; background: rgba(255,255,255,0.6); border: 1px solid #e9d5ff; border-radius: 6px; padding: 4px 12px; }
+        .footer { margin-top: 2.5rem; font-size: 0.72rem; color: #c4a8e0; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="top-bar">
+            <div class="dot pink"></div>
+            <div class="dot"></div>
+            <div class="dot blue"></div>
+            <span>{{ server_hostname }}</span>
+        </div>
+        <h1>Althea<br>Barbato</h1>
+        <p class="byline">Open Source Server Administration &mdash; Lab 2: Automation &amp; Infrastructure</p>
+        <div class="status-line">
+            <div class="status-dot"></div>
+            <span>online &mdash; Ubuntu Server 20.04 LTS</span>
+        </div>
+        <div class="divider"></div>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Hostname</label>
+                <p>{{ server_hostname }}</p>
+            </div>
+            <div class="info-item">
+                <label>IP Address</label>
+                <p>{{ domain_name }}</p>
+            </div>
+            <div class="info-item">
+                <label>Platform</label>
+                <p>Oracle Cloud</p>
+            </div>
+            <div class="info-item">
+                <label>Institution</label>
+                <p>Illinois Tech</p>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tags">
+            <span class="tag">Ansible</span>
+            <span class="tag">NGINX</span>
+            <span class="tag">UFW Firewall</span>
+            <span class="tag">SSH key auth</span>
+            <span class="tag">Fail2Ban</span>
+            <span class="tag">node_exporter</span>
+            <span class="tag">rsyslog</span>
+        </div>
+        <p class="footer">deployed via Ansible automation &mdash; June 2026</p>
+    </div>
+</body>
+</html>

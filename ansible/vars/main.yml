@@ -1,0 +1,24 @@
+---
+# Deployment variables for webserver01
+server_hostname: webserver01
+admin_user: sysadmin
+domain_name: "163.192.117.50"
+
+# Ports to allow through firewall
+allowed_ports:
+  - { port: 22,   proto: tcp, comment: "SSH" }
+  - { port: 80,   proto: tcp, comment: "HTTP" }
+  - { port: 443,  proto: tcp, comment: "HTTPS" }
+  - { port: 9100, proto: tcp, comment: "node_exporter metrics" }
+
+# Monitoring
+node_exporter_version: "1.8.2"
+node_exporter_user: node_exporter
+
+# Logging
+log_retention_days: 30
+rsyslog_remote_enabled: false
+
+# IPs exempt from Fail2Ban bans (e.g. the admin's own control machine)
+fail2ban_ignoreip:
+  - "172.59.190.159"

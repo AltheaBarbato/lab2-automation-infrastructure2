@@ -1,0 +1,30 @@
+---
+# Webserver role – deploys and configures NGINX
+
+- name: Install NGINX
+  shell: DEBIAN_FRONTEND=noninteractive apt-get install -y -qq nginx
+  register: nginx_install_result
+  changed_when: "'Setting up' in nginx_install_result.stdout"
+
+- name: Deploy NGINX site configuration
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/default
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart NGINX
+
+- name: Deploy index page
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: www-data
+    group: www-data
+    mode: "0644"
+
+- name: Enable and start NGINX
+  systemd:
+    name: nginx
+    enabled: true
+    state: started

@@ -1,0 +1,72 @@
+---
+# Logging role – configures rsyslog and log retention
+
+- name: Ensure rsyslog is installed
+  shell: DEBIAN_FRONTEND=noninteractive apt-get install -y -qq rsyslog
+  register: rsyslog_install_result
+  changed_when: "'Setting up' in rsyslog_install_result.stdout"
+
+- name: Configure rsyslog for structured local logging
+  copy:
+    dest: /etc/rsyslog.d/10-lab2.conf
+    content: |
+      # Lab 2 logging configuration
+      # Capture auth events to dedicated file
+      auth,authpriv.*                 /var/log/auth.log
+      # Capture kernel messages
+      kern.*                          /var/log/kern.log
+      # Capture all remaining messages
+      *.info;auth,authpriv.none       /var/log/syslog
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart rsyslog
+
+- name: Configure log rotation for NGINX logs
+  copy:
+    dest: /etc/logrotate.d/nginx-lab2
+    content: |
+      /var/log/nginx/*.log {
+          daily
+          missingok
+          rotate {{ log_retention_days }}
+          compress
+          delaycompress
+          notifempty
+          create 0640 www-data adm
+          sharedscripts
+          postrotate
+              /bin/kill -USR1 $(cat /run/nginx.pid 2>/dev/null) 2>/dev/null || true
+          endscript
+      }
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Configure log rotation for system logs
+  copy:
+    dest: /etc/logrotate.d/syslog-lab2
+    content: |
+      /var/log/syslog
+      /var/log/auth.log
+      /var/log/kern.log
+      {
+          daily
+          rotate {{ log_retention_days }}
+          missingok
+          notifempty
+          compress
+          delaycompress
+          postrotate
+              /usr/lib/rsyslog/rsyslog-rotate
+          endscript
+      }
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Enable and start rsyslog
+  systemd:
+    name: rsyslog
+    enabled: true
+    state: started

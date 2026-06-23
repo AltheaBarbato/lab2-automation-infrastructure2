@@ -1,0 +1,33 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html;
+
+    server_name {{ domain_name }};
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # Hide NGINX version
+    server_tokens off;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # Block access to hidden files
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # Structured access log
+    access_log /var/log/nginx/access.log combined;
+    error_log  /var/log/nginx/error.log warn;
+}
