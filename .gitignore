@@ -1,2 +1,6 @@
 deploy-*.log
 *.retry
+STEP-BY-STEP-GUIDE.md
+docs/build-docx.js
+docs/*.docx
+docs/reflection.md
