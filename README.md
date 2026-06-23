@@ -1,6 +1,5 @@
 # Lab 2 Automation & Infrastructure Project
 **Name:** Althea Barbato
-**Date:** June 23, 2026
 
 Ansible automation that sets up `webserver01` security baseline, NGINX, logging, and monitoring, all through reusable playbooks instead of typing commands by hand.
 
