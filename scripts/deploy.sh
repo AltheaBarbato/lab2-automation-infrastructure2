@@ -1,8 +1,4 @@
 #!/bin/bash
-# deploy.sh – Runs the full Ansible deployment against webserver01
-# Usage: bash scripts/deploy.sh [--check]  (--check for dry-run)
-# Run from the lab2/ root directory
-
 set -e
 
 INVENTORY="ansible/inventory.ini"

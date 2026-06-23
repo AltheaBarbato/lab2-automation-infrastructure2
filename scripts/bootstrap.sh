@@ -1,8 +1,4 @@
 #!/bin/bash
-# bootstrap.sh – Prepares the control machine to run Ansible against webserver01
-# Run this on YOUR LOCAL MACHINE (not the server)
-# Usage: bash scripts/bootstrap.sh
-
 set -e
 
 SERVER_IP="163.192.117.50"
@@ -13,7 +9,6 @@ echo " Lab 2 – Ansible Bootstrap"
 echo "======================================"
 echo ""
 
-# Step 1: Check for Ansible
 echo "[1/4] Checking for Ansible..."
 if ! command -v ansible &>/dev/null; then
     echo "  Ansible not found. Installing..."
@@ -28,7 +23,6 @@ if ! command -v ansible &>/dev/null; then
 fi
 echo "  Ansible $(ansible --version | head -1 | awk '{print $NF}') found."
 
-# Step 2: Check SSH key
 echo "[2/4] Checking SSH key..."
 if [ ! -f "$SSH_KEY" ]; then
     echo "  ERROR: SSH key not found at $SSH_KEY"
@@ -38,7 +32,6 @@ fi
 chmod 600 "$SSH_KEY"
 echo "  SSH key OK: $SSH_KEY"
 
-# Step 3: Test connectivity
 echo "[3/4] Testing connection to $SERVER_IP..."
 if ssh -i "$SSH_KEY" -o ConnectTimeout=10 -o StrictHostKeyChecking=no \
        -o BatchMode=yes "sysadmin@$SERVER_IP" "echo connected" &>/dev/null; then
@@ -49,7 +42,6 @@ else
     exit 1
 fi
 
-# Step 4: Test Ansible ping
 echo "[4/4] Running Ansible ping test..."
 ansible webservers -i ansible/inventory.ini -m ping
 

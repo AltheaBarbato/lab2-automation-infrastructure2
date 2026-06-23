@@ -1,8 +1,4 @@
 #!/bin/bash
-# verify.sh – Post-deployment verification checks
-# Runs against the live server to confirm all services are operational
-# Usage: bash scripts/verify.sh
-
 SERVER_IP="163.192.117.50"
 SSH_KEY="$HOME/.ssh/lab1-key.pem"
 SSH_OPTS="-i $SSH_KEY -o StrictHostKeyChecking=no -o ConnectTimeout=10"

@@ -1,6 +1,4 @@
 ---
-# Logging role – configures rsyslog and log retention
-
 - name: Ensure rsyslog is installed
   shell: DEBIAN_FRONTEND=noninteractive apt-get install -y -qq rsyslog
   register: rsyslog_install_result
@@ -10,12 +8,8 @@
   copy:
     dest: /etc/rsyslog.d/10-lab2.conf
     content: |
-      # Lab 2 logging configuration
-      # Capture auth events to dedicated file
       auth,authpriv.*                 /var/log/auth.log
-      # Capture kernel messages
       kern.*                          /var/log/kern.log
-      # Capture all remaining messages
       *.info;auth,authpriv.none       /var/log/syslog
     owner: root
     group: root

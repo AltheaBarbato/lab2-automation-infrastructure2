@@ -1,7 +1,4 @@
 ---
-# Security baseline role
-# Applies hardening, firewall rules, patching, and user configuration
-
 - name: Update apt cache
   command: apt-get update -qq
   changed_when: false
@@ -60,9 +57,6 @@
     comment: "{{ item.comment }}"
   loop: "{{ allowed_ports }}"
 
-# This Oracle Cloud base image ships an extra iptables INPUT filter that sits
-# in front of UFW's own chain and REJECTs anything not explicitly allowed here.
-# Without this, UFW shows a port as allowed but it is still unreachable externally.
 - name: Allow required ports through the OS-level iptables filter
   iptables:
     chain: INPUT

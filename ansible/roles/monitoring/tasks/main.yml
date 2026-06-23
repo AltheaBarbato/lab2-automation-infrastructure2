@@ -1,6 +1,4 @@
 ---
-# Monitoring role – installs Prometheus node_exporter for metrics collection
-
 - name: Create node_exporter system user
   user:
     name: "{{ node_exporter_user }}"

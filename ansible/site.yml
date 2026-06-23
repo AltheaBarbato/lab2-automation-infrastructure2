@@ -1,7 +1,4 @@
 ---
-# Main playbook – deploys the full webserver01 stack
-# Run: ansible-playbook -i inventory.ini site.yml
-
 - name: Deploy webserver01 infrastructure
   hosts: webservers
   become: true
@@ -10,11 +7,6 @@
     - vars/main.yml
 
   pre_tasks:
-    # webserver01 runs Ubuntu 20.04, whose default python3 is 3.8. Modern
-    # ansible-core refuses to run any module against Python <3.9, so this
-    # uses the raw module (no Python required) to bootstrap python3.9 before
-    # anything else runs. ansible_python_interpreter in inventory.ini then
-    # points every later task at it.
     - name: Ensure Python 3.9+ is available for Ansible
       raw: test -x /usr/bin/python3.9 || (apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3.9)
       changed_when: false

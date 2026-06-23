@@ -1,6 +1,4 @@
 ---
-# Webserver role – deploys and configures NGINX
-
 - name: Install NGINX
   shell: DEBIAN_FRONTEND=noninteractive apt-get install -y -qq nginx
   register: nginx_install_result
