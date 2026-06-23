@@ -1,8 +1,8 @@
-# Lab 2 – Automation & Infrastructure Project
-**Student:** Althea Barbato
+# Lab 2 Automation & Infrastructure Project
+**Name:** Althea Barbato
 **Date:** June 23, 2026
 
-Ansible automation that sets up `webserver01` (same Oracle Cloud server from Lab 1) — security baseline, NGINX, logging, and monitoring, all through reusable playbooks instead of typing commands by hand.
+Ansible automation that sets up `webserver01` security baseline, NGINX, logging, and monitoring, all through reusable playbooks instead of typing commands by hand.
 
 ## Running it
 
@@ -19,13 +19,7 @@ bash scripts/deploy.sh           # actually deploys + verifies
 - **logging** — rsyslog + log rotation (30 days)
 - **monitoring** — Prometheus node_exporter on port 9100
 
-## Docs
-
-- [Architecture Overview](docs/architecture-overview.md)
-- [Deployment Documentation](docs/deployment-documentation.md)
-- [Reflection](docs/reflection.md)
-- [Step-by-Step Guide](STEP-BY-STEP-GUIDE.md) — if you want to actually run this yourself
 
 ## Server
 
-`webserver01` — Ubuntu Server 20.04 LTS, Oracle Cloud Always Free Tier, `163.192.117.50`, admin user `sysadmin` (key-only SSH, same key from Lab 1)
+`webserver01` — Ubuntu Server 20.04 LTS, Oracle Cloud Always Free Tier, `163.192.117.50`, admin user `sysadmin` 
